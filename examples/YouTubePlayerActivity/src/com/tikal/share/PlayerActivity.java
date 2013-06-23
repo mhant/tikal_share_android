@@ -19,7 +19,7 @@ import com.google.android.youtube.player.YouTubePlayerView;
 
 public class PlayerActivity extends YouTubeBaseActivity implements OnInitializedListener {
 
-	public static final String DEVELOPER_KEY = "AIzaSyAF1kx_N4utAzBWt_t1bdcRpgBQlwyAFgo";
+	public static final String DEVELOPER_KEY = "YOUR_DEVELOPER_KEY_GOES_HERE";
 	private MHPlaybackEventListener playerEventListener;
 	private MHPlayerStateChangeListener playerStateChangeListener;
 	private YouTubePlayer playa; //hollla
