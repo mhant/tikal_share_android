@@ -1,10 +1,11 @@
-
 package com.tikal.share;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -18,11 +19,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.cloud.backend.android.tikal.share.sync.CloudSync;
 import com.tikal.share.youtube.YoutubePlaylist;
 import com.tikal.share.youtube.YoutubeVideoInfo;
 
+@SuppressLint("ValidFragment")
 public class MyListFragment extends ListFragment {
-	List listVideos = new ArrayList();
+	List<YoutubeVideoInfo> listVideos = new ArrayList();
 
 	public MyListFragment() {
 	}
@@ -32,7 +35,26 @@ public class MyListFragment extends ListFragment {
 		for (YoutubeVideoInfo node : list) {
 			listVideos.add(node);
 		}
+	}
 
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+
+		/*
+		 * List listVideos = new ArrayList(); listVideos.add(new Video("London",
+		 * "video about London", "10:22", "10/02/2012")); listVideos.add(new
+		 * Video("Rome", "video about Rome", "10:22", "10/02/2012"));
+		 * listVideos.add(new Video("Paris", "video about Paris", "10:22",
+		 * "10/02/2012")); listVideos.add(new Video("New York",
+		 * "video about New York", "10:22", "10/02/2012")); listVideos.add(new
+		 * Video("Tel aviv", "video about Tel Aviv", "10:22", "10/02/2012"));
+		 * listVideos.add(new Video("Holon", "video about Holon", "10:22",
+		 * "10/02/2012"));
+		 */VideoListAdapter vla = new VideoListAdapter(getActivity(),
+				R.layout.list_videos_row, listVideos);
+		setListAdapter(vla);
+		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 
 	@Override
@@ -41,30 +63,15 @@ public class MyListFragment extends ListFragment {
 		getListView().setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-				Toast.makeText(arg0.getContext(), "clicked on " + arg3, Toast.LENGTH_LONG).show();
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
 
+				Intent i = new Intent(getActivity(), PlayerActivity.class);
+				String videoId = listVideos.get(position).getId();
+				i.putExtra(CloudSync.INTENT_VIDEO_ID, videoId);
+				startActivity(i);
 			}
 		});
-	}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-
-		/*
-		 * List listVideos = new ArrayList(); listVideos.add(new Video("London", "video about London", "10:22",
-		 * "10/02/2012")); listVideos.add(new Video("Rome", "video about Rome", "10:22", "10/02/2012"));
-		 * listVideos.add(new Video("Paris", "video about Paris", "10:22", "10/02/2012")); listVideos.add(new
-		 * Video("New York", "video about New York", "10:22", "10/02/2012")); listVideos.add(new Video("Tel aviv",
-		 * "video about Tel Aviv", "10:22", "10/02/2012")); listVideos.add(new Video("Holon", "video about Holon",
-		 * "10:22", "10/02/2012"));
-		 */VideoListAdapter vla = new VideoListAdapter(getActivity(),
-				R.layout.list_videos_row, listVideos);
-		setListAdapter(vla);
-
-		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 
 	public class VideoListAdapter extends ArrayAdapter {
@@ -89,6 +96,10 @@ public class MyListFragment extends ListFragment {
 			/* Extract the city's object to show */
 			YoutubeVideoInfo video = (YoutubeVideoInfo) getItem(position);
 
+			ImageView imageView = (ImageView) convertView.findViewById(R.id.video_image);
+			if (video.getThumbnailBmp() != null) {
+				imageView.setImageBitmap(video.getThumbnailBmp());
+			}	
 			/* Set Video Title */
 			TextView txtName = (TextView) convertView
 					.findViewById(R.id.video_title);
@@ -109,17 +120,14 @@ public class MyListFragment extends ListFragment {
 
 			/* Take the ImageView from layout and set the city's image */
 			/*
-			 * ImageView imageCity = (ImageView) convertView.findViewById(R.id.ImageCity); String uri = "drawable/" +
-			 * video.getImage(); int imageResource = context.getResources().getIdentifier(uri, null,
-			 * context.getPackageName()); Drawable image = context.getResources().getDrawable(imageResource);
+			 * ImageView imageCity = (ImageView)
+			 * convertView.findViewById(R.id.ImageCity); String uri =
+			 * "drawable/" + video.getImage(); int imageResource =
+			 * context.getResources().getIdentifier(uri, null,
+			 * context.getPackageName()); Drawable image =
+			 * context.getResources().getDrawable(imageResource);
 			 * imageCity.setImageDrawable(image);
 			 */
-
-			ImageView imageView = (ImageView) convertView.findViewById(R.id.video_image);
-			if (video.getThumbnailBmp() != null) {
-				imageView.setImageBitmap(video.getThumbnailBmp());
-			}
-
 			return convertView;
 		}
 	}

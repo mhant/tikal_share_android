@@ -3,10 +3,6 @@ package com.tikal.share;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.View;
-import android.widget.Button;
-
 
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -30,7 +26,7 @@ public class PlayerActivity extends YouTubeBaseActivity implements OnInitialized
 	
 	
 	//remove when integrated
-	private String videoID = "b7pjiYr-Bpo";
+	private String videoID;
 	private String clientID = "mikeh";
 	
 
@@ -42,11 +38,20 @@ public class PlayerActivity extends YouTubeBaseActivity implements OnInitialized
 		playerLoaded = false;
 		previousReqSeek = 0;
 		
+		videoID = getIntent().getExtras().getString(CloudSync.INTENT_VIDEO_ID);
+		clientID = getIntent().getExtras().getString(CloudSync.INTENT_VIDEO_ID);
+		/*
 		Intent syncStart = new Intent(this, CloudSync.class);
 		syncStart.putExtra(CloudSync.INTENT_VIDEO_ID, videoID);
 		syncStart.putExtra(CloudSync.INTENT_CLIENT_ID, clientID);
 		syncStart.putExtra(CloudSync.INTENT_COMMAND,CloudSync.INTENT_COMMAND_GET);
-		this.startActivityForResult(syncStart, 55);
+		this.startActivityForResult(syncStart, 55);*/
+		
+		YouTubePlayerView youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
+		youTubeView.initialize(DEVELOPER_KEY, this);  
+
+		playerEventListener = new MHPlaybackEventListener();
+		playerStateChangeListener = new MHPlayerStateChangeListener();
 
 		
 
@@ -120,13 +125,14 @@ public class PlayerActivity extends YouTubeBaseActivity implements OnInitialized
 		@Override
 		public void onPaused() {
 			//call save here or in onStopped, seems that when one is called the other is
-			Log.d("PlayerStateChanged", "onPaused");
+			/*Log.d("PlayerStateChanged", "onPaused");
 			Intent syncStart = new Intent(PlayerActivity.this, CloudSync.class);
 			syncStart.putExtra(CloudSync.INTENT_VIDEO_ID, videoID);
 			syncStart.putExtra(CloudSync.INTENT_CLIENT_ID, clientID);
 			syncStart.putExtra(CloudSync.INTENT_OFFSET_MILIS, "" + playa.getCurrentTimeMillis());
 			syncStart.putExtra(CloudSync.INTENT_COMMAND, CloudSync.INTENT_COMMAND_SET);
-			PlayerActivity.this.startActivityForResult(syncStart, 55);
+			PlayerActivity.this.startActivityForResult(syncStart, 55);*/
+			
 		}
 
 		@Override
@@ -143,8 +149,6 @@ public class PlayerActivity extends YouTubeBaseActivity implements OnInitialized
 
 		@Override
 		public void onStopped() {
-			Log.d("PlayerStateChanged", "onStopped");
-
 		}
 	}
 
