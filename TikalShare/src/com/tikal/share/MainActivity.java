@@ -2,15 +2,15 @@
 package com.tikal.share;
 
 import java.util.List;
-import java.util.Locale;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.CursorJoiner.Result;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -70,7 +70,9 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 		@Override
 		protected List<YoutubePlaylist> doInBackground(Void... params) {
 			LookupChannel lookup = new LookupChannel(false);
-			List<YoutubePlaylist> list = lookup.getFullListByUser("androiddev101");
+	        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+	        String userName = sharedPreferences.getString("userName", "androiddev101");
+			List<YoutubePlaylist> list = lookup.getFullListByUser(userName);
 			return list;
 		}
 
@@ -152,8 +154,7 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 				 */
 				break;
 			case R.id.action_settings:
-				sendBroadcast(new Intent(DATA_UPDATE));
-				Toast.makeText(this, "Setting", Toast.LENGTH_SHORT).show();
+				startActivity(new Intent(this, AppPreferenceFragment.class));
 				break;
 		}
 		return super.onOptionsItemSelected(item);
