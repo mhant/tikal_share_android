@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="100dp"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp" >
+
+    <ImageView
+        android:id="@+id/video_image"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_launcher" />
+
+    <TextView
+        android:id="@+id/video_title"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_toRightOf="@id/video_image"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="2"
+        android:text="how to bla bla\n tomer morisi "
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/video_discreption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/video_image"
+        android:text="this is video about \n and ...  also .. " />
+
+    <TextView
+        android:id="@+id/video_length"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/video_discreption"
+        android:text="10:22"
+        android:textSize="8sp" />
+
+    <TextView
+        android:id="@+id/video_created"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/video_discreption"
+        android:text="10/11/2012"
+        android:textSize="8sp" />
+
+</RelativeLayout>
