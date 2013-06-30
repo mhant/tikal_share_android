@@ -18,12 +18,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tikal.share.youtube.LookupChannel;
@@ -72,11 +68,10 @@ public class MainActivity extends FragmentActivity implements
 		@Override
 		protected List<YoutubePlaylist> doInBackground(Void... params) {
 			LookupChannel lookup = new LookupChannel(false);
-			SharedPreferences sharedPreferences = PreferenceManager
-					.getDefaultSharedPreferences(MainActivity.this);
-			String userName = sharedPreferences.getString("userName",
-					"androiddev101");
-			List<YoutubePlaylist> list = lookup.getFullListByUser(userName);
+			SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+			String userName = sharedPreferences.getString("userName", "androiddev101");
+			boolean downloadThumbnail = sharedPreferences.getBoolean("downloadThumbnail", true);
+			List<YoutubePlaylist> list = lookup.getFullListByUser(userName,downloadThumbnail);
 			return list;
 		}
 
@@ -151,6 +146,7 @@ public class MainActivity extends FragmentActivity implements
 		switch (item.getItemId()) {
 
 		case R.id.action_refresh:
+			new myAsyncTask().execute();
 			// Add tab action
 			/*
 			 * PLAYLIST_COUNT = 4; mViewPager.setAdapter(null);
