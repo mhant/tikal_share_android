@@ -69,16 +69,17 @@ public class MainActivity extends FragmentActivity implements
 		protected void onPreExecute() {
 			super.onPreExecute();
 			// Start Animation
-			List<YoutubePlaylist> list = (List<YoutubePlaylist>) myYTDC.unchacheThis(myCacheID);
-			if (list != null) {
-				onUpdateRecieve(getActionBar(), list);
-				addActionbarTabs(getActionBar());
-			}
+			// Tomer: disable cache loader for testing  
+//			List<YoutubePlaylist> list = (List<YoutubePlaylist>) myYTDC.unchacheThis(myCacheID);
+//			if (list != null) {
+//				onUpdateRecieve(getActionBar(), list);
+//				addActionbarTabs(getActionBar());
+//			}
 		}
 
 		protected void onPostExecute(List<YoutubePlaylist> result) {
 			// Stop Animation
-			Toast.makeText(getApplicationContext(), "blal", 1).show();
+//			Toast.makeText(getApplicationContext(), "blal", 1).show();
 			// Parse the data
 			PLAYLIST_COUNT = result.size();
 			onUpdateRecieve(getActionBar(), result);
@@ -114,7 +115,7 @@ public class MainActivity extends FragmentActivity implements
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mPlaylistPagerAdapter);
-		mPlaylistPagerAdapter.notifyDataSetChanged();
+		mPlaylistPagerAdapter.swapItems(result);
 
 		// When swiping between different sections, select the corresponding
 		// tab. We can also use ActionBar.Tab#select() to do this if we have
@@ -207,6 +208,11 @@ public class MainActivity extends FragmentActivity implements
 			Fragment fragment = new MyListFragment(
 					list.get(position));
 			return fragment;
+		}
+
+		public void swapItems(List<YoutubePlaylist> items) {
+			this.list = items;
+			notifyDataSetChanged();
 		}
 
 		@Override
