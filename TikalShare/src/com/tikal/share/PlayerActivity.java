@@ -40,8 +40,8 @@ public class PlayerActivity extends YouTubeBaseActivity implements OnInitialized
 		
 		videoID = getIntent().getExtras().getString(CloudSync.INTENT_VIDEO_ID);
 		clientID = getIntent().getExtras().getString(CloudSync.INTENT_VIDEO_ID);
-		
-		/*Intent syncStart = new Intent(this, CloudSync.class);
+		/*
+		Intent syncStart = new Intent(this, CloudSync.class);
 		syncStart.putExtra(CloudSync.INTENT_VIDEO_ID, videoID);
 		syncStart.putExtra(CloudSync.INTENT_CLIENT_ID, clientID);
 		syncStart.putExtra(CloudSync.INTENT_COMMAND,CloudSync.INTENT_COMMAND_GET);

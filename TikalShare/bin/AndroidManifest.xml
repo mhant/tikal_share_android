@@ -9,11 +9,11 @@
         android:targetSdkVersion="17" />
 
     <permission
-        android:name="com.google.cloud.backend.android.permission.C2D_MESSAGE"
+        android:name="com.tikal.share.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="com.google.cloud.backend.android.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.tikal.share.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -27,7 +27,7 @@
         
          <activity
             android:name="com.tikal.share.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -55,7 +55,7 @@
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-                <category android:name="com.google.cloud.backend.android" />
+                <category android:name="com.tikal.share" />
             </intent-filter>
         </receiver>
         <activity android:name="com.tikal.share.PlayerActivity" android:screenOrientation="portrait">

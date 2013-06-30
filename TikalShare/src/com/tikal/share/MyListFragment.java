@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -95,6 +96,10 @@ public class MyListFragment extends ListFragment {
 			/* Extract the city's object to show */
 			YoutubeVideoInfo video = (YoutubeVideoInfo) getItem(position);
 
+			ImageView imageView = (ImageView) convertView.findViewById(R.id.video_image);
+			if (video.getThumbnailBmp() != null) {
+				imageView.setImageBitmap(video.getThumbnailBmp());
+			}	
 			/* Set Video Title */
 			TextView txtName = (TextView) convertView
 					.findViewById(R.id.video_title);
