@@ -18,3 +18,11 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+# added to prevent runtime errors (kazsato)
+-keep class * extends java.util.ListResourceBundle {
+    protected Object[][] getContents();
+}
+
+# added to prevent errors on exporting .apk (kazsato)
+#-libraryjars ./libs/google-play-services.jar
