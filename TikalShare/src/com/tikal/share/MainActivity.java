@@ -3,6 +3,10 @@ package com.tikal.share;
 
 import java.util.Locale;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,20 +25,12 @@ import com.actionbarsherlock.view.MenuItem;
 
 public class MainActivity extends SherlockFragmentActivity implements ActionBar.TabListener {
 
-	/**
-	 * The {@link android.support.v4.view.PagerAdapter} that will provide fragments for each of the sections. We use a
-	 * {@link android.support.v4.app.FragmentPagerAdapter} derivative, which will keep every loaded fragment in memory.
-	 * If this becomes too memory intensive, it may be best to switch to a
-	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-	 */
 	PlayListPagerAdapter mPlaylistPagerAdapter;
-
-	/**
-	 * The {@link ViewPager} that will host the section contents.
-	 */
 	ViewPager mViewPager;
 
-	private int PLAYLIST_SIZE = 3;
+	private int PLAYLIST_COUNT = 3;
+	public static final String DATA_UPDATE = "data_update";
+	private IntentFilter filter = new IntentFilter(DATA_UPDATE);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +59,15 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 			}
 		});
 
+		addActionbarTabs(actionBar);
+	}
+
+	/**
+	 * @param actionBar
+	 */
+	private void addActionbarTabs(final ActionBar actionBar) {
+		actionBar.removeAllTabs();
+
 		// For each of the sections in the app, add a tab to the action bar.
 		for (int i = 0; i < mPlaylistPagerAdapter.getCount(); i++) {
 			// Create a tab with text corresponding to the page title defined by
@@ -74,6 +79,18 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 							.setText(mPlaylistPagerAdapter.getPageTitle(i))
 							.setTabListener(this));
 		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		registerReceiver(datareceiver, filter);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		unregisterReceiver(datareceiver);
 	}
 
 	@Override
@@ -89,14 +106,16 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 
 			case R.id.action_refresh:
 				// Add tab action
-				PLAYLIST_SIZE = 4;
+				PLAYLIST_COUNT = 4;
 				mViewPager.setAdapter(null);
 				mPlaylistPagerAdapter = new PlayListPagerAdapter(getSupportFragmentManager());
 				mViewPager.setAdapter(mPlaylistPagerAdapter);
 				// mPlaylistPagerAdapter.notifyDataSetChanged();
 				mViewPager.invalidate();
+				addActionbarTabs(getSupportActionBar());
 				break;
 			case R.id.action_settings:
+				sendBroadcast(new Intent(DATA_UPDATE));
 				Toast.makeText(this, "Setting", Toast.LENGTH_SHORT).show();
 				break;
 		}
@@ -125,9 +144,28 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 		}
 
 		@Override
+		public long getItemId(int position) {
+
+			switch (position) {
+				case 0:
+				case 1:
+				case 2:
+					return super.getItemId(position);
+				case 3:
+					return 4;
+			}
+			return position;
+		}
+
+		@Override
+		public int getItemPosition(Object object) {
+			return super.getItemPosition(object);
+		}
+
+		@Override
 		public int getCount() {
 			// Show 3 total pages.
-			return PLAYLIST_SIZE;
+			return PLAYLIST_COUNT;
 		}
 
 		@Override
@@ -140,6 +178,8 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 					return getString(R.string.title_section2).toUpperCase(l);
 				case 2:
 					return getString(R.string.title_section3).toUpperCase(l);
+				case 3:
+					return getString(R.string.title_section4).toUpperCase(l);
 			}
 			return null;
 		}
@@ -176,14 +216,17 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 
 	@Override
 	public void onTabUnselected(Tab tab, android.support.v4.app.FragmentTransaction ft) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onTabReselected(Tab tab, android.support.v4.app.FragmentTransaction ft) {
-		// TODO Auto-generated method stub
-
 	}
+
+	private BroadcastReceiver datareceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Toast.makeText(getApplicationContext(), "received", Toast.LENGTH_SHORT);
+		}
+	};
 
 }
