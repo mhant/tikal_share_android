@@ -1,5 +1,8 @@
 package com.example.cacheyoutubedata;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,7 +21,10 @@ public class MainActivity extends Activity {
 		myPDCS = new PreferencesDataCacheStore(this);
 		myYTDC = new YouTubeDataCacher(myPDCS);
 		
-		myYTDC.cacheThis(myCacheID, new String[] {"abc", "jjj"});
+		ArrayList<ArrayList<String>>ll = new ArrayList<ArrayList<String>>();
+		
+		
+		myYTDC.cacheThis(myCacheID, ll);
 		
 		Object r = myYTDC.unchacheThis(myCacheID);
 		Log.d("MAIN", r.getClass().getName());
