@@ -27,7 +27,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/video_image"
-        android:text="this is video about \n and ...  also .. " />
+        android:ellipsize="end"
+        android:maxLines="5" />
 
     <TextView
         android:id="@+id/video_length"
