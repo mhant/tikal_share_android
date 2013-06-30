@@ -90,8 +90,7 @@ public class MainActivity extends FragmentActivity implements
 			LookupChannel lookup = new LookupChannel(false);
 			SharedPreferences sharedPreferences = PreferenceManager
 					.getDefaultSharedPreferences(MainActivity.this);
-			String userName = sharedPreferences.getString("userName",
-					"androiddev101");
+			String userName =	"androiddev101";//enter channel name here
 			boolean downloadThumbnail = sharedPreferences.getBoolean("downloadThumbnail", true);
 			List<YoutubePlaylist> list = lookup.getFullListByUser(userName, downloadThumbnail);
 			myYTDC.cacheThis(myCacheID, list);

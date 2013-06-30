@@ -4,7 +4,7 @@
 
         <EditTextPreference
             android:id="@+id/userName"
-            android:defaultValue="androiddev101"
+            android:defaultValue="default"
             android:key="userName"
             android:title="@string/user_name" 
             android:summary="@string/user_name_summary"/>

@@ -1,7 +1,9 @@
 package com.tikal.share;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.android.youtube.player.YouTubeBaseActivity;
@@ -23,12 +25,12 @@ public class PlayerActivity extends YouTubeBaseActivity implements OnInitialized
 	private YouTubePlayer playa; //hollla
 	private boolean playerLoaded;
 	private int previousReqSeek;
-	
-	
+
+
 	//remove when integrated
 	private String videoID;
 	private String clientID = "mikeh";
-	
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,29 +39,34 @@ public class PlayerActivity extends YouTubeBaseActivity implements OnInitialized
 
 		playerLoaded = false;
 		previousReqSeek = 0;
-		
+
 		videoID = getIntent().getExtras().getString(CloudSync.INTENT_VIDEO_ID);
-		clientID = getIntent().getExtras().getString(CloudSync.INTENT_VIDEO_ID);
-		
-		Intent syncStart = new Intent(this, CloudSync.class);
-		syncStart.putExtra(CloudSync.INTENT_VIDEO_ID, videoID);
-		syncStart.putExtra(CloudSync.INTENT_CLIENT_ID, clientID);
-		syncStart.putExtra(CloudSync.INTENT_COMMAND,CloudSync.INTENT_COMMAND_GET);
-		this.startActivityForResult(syncStart, 55);
-		
+		SharedPreferences sharedPreferences = PreferenceManager
+		.getDefaultSharedPreferences(PlayerActivity.this);
+		clientID = sharedPreferences.getString("userName",
+		"default");	
+		//if non-default client id
+		if(!clientID.equals("default")){
+			Intent syncStart = new Intent(this, CloudSync.class);
+			syncStart.putExtra(CloudSync.INTENT_VIDEO_ID, videoID);
+			syncStart.putExtra(CloudSync.INTENT_CLIENT_ID, clientID);
+			syncStart.putExtra(CloudSync.INTENT_COMMAND,CloudSync.INTENT_COMMAND_GET);
+			this.startActivityForResult(syncStart, 55);
+		}
+
 		/*YouTubePlayerView youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
 		youTubeView.initialize(DEVELOPER_KEY, this);  
 
 		playerEventListener = new MHPlaybackEventListener();
 		playerStateChangeListener = new MHPlayerStateChangeListener();
-*/
-		
+		 */
 
-//		YouTubePlayerView youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
-//		youTubeView.initialize(DEVELOPER_KEY, this);  
-//
-//		playerEventListener = new MHPlaybackEventListener();
-//		playerStateChangeListener = new MHPlayerStateChangeListener();
+
+		//		YouTubePlayerView youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
+		//		youTubeView.initialize(DEVELOPER_KEY, this);  
+		//
+		//		playerEventListener = new MHPlaybackEventListener();
+		//		playerStateChangeListener = new MHPlayerStateChangeListener();
 	}
 	@Override
 	protected void onDestroy() {
@@ -87,7 +94,7 @@ public class PlayerActivity extends YouTubeBaseActivity implements OnInitialized
 		}
 		YouTubePlayerView youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
 		youTubeView.initialize(DEVELOPER_KEY, this);  
-		
+
 		playerEventListener = new MHPlaybackEventListener();
 		playerStateChangeListener = new MHPlayerStateChangeListener();
 	}
@@ -143,7 +150,7 @@ public class PlayerActivity extends YouTubeBaseActivity implements OnInitialized
 			syncStart.putExtra(CloudSync.INTENT_COMMAND, CloudSync.INTENT_COMMAND_SET);
 			PlayerActivity.this.startActivityForResult(syncStart, 55);*/
 			previousReqSeek = playa.getCurrentTimeMillis();
-			
+
 		}
 
 		@Override
