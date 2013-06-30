@@ -1,8 +1,10 @@
-
 package com.tikal.share;
 
 import java.util.List;
 
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,25 +14,23 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
-import com.example.cacheyoutubedata.PreferencesDataCacheStore;
-import com.example.cacheyoutubedata.YouTubeDataCacher;
 import com.tikal.share.youtube.LookupChannel;
 import com.tikal.share.youtube.YoutubePlaylist;
 
-public class MainActivity extends SherlockFragmentActivity implements ActionBar.TabListener {
+public class MainActivity extends FragmentActivity implements
+		ActionBar.TabListener {
 
 	PlayListPagerAdapter mPlaylistPagerAdapter;
 	ViewPager mViewPager;
@@ -53,7 +53,7 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 		myYTDC = new YouTubeDataCacher(myPDCS);
 
 		// Set up the action bar.
-		final ActionBar actionBar = getSupportActionBar();
+		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		// actionBar.
 
@@ -79,15 +79,17 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 
 			// Parse the data
 			PLAYLIST_COUNT = result.size();
-			onUpdateRecieve(getSupportActionBar(), result);
-			addActionbarTabs(getSupportActionBar());
+			onUpdateRecieve(getActionBar(), result);
+			addActionbarTabs(getActionBar());
 		}
 
 		@Override
 		protected List<YoutubePlaylist> doInBackground(Void... params) {
 			LookupChannel lookup = new LookupChannel(false);
-	        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-	        String userName = sharedPreferences.getString("userName", "androiddev101");
+			SharedPreferences sharedPreferences = PreferenceManager
+					.getDefaultSharedPreferences(MainActivity.this);
+			String userName = sharedPreferences.getString("userName",
+					"androiddev101");
 			List<YoutubePlaylist> list = lookup.getFullListByUser(userName);
 			return list;
 		}
@@ -98,10 +100,12 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 	 * @param actionBar
 	 * @param result
 	 */
-	private void onUpdateRecieve(final ActionBar actionBar, List<YoutubePlaylist> result) {
+	private void onUpdateRecieve(final ActionBar actionBar,
+			List<YoutubePlaylist> result) {
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
-		mPlaylistPagerAdapter = new PlayListPagerAdapter(getSupportFragmentManager(), result);
+		mPlaylistPagerAdapter = new PlayListPagerAdapter(
+				getSupportFragmentManager(), result);
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -110,12 +114,13 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 		// When swiping between different sections, select the corresponding
 		// tab. We can also use ActionBar.Tab#select() to do this if we have
 		// a reference to the Tab.
-		mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-			@Override
-			public void onPageSelected(int position) {
-				actionBar.setSelectedNavigationItem(position);
-			}
-		});
+		mViewPager
+				.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+					@Override
+					public void onPageSelected(int position) {
+						actionBar.setSelectedNavigationItem(position);
+					}
+				});
 	}
 
 	/**
@@ -130,10 +135,9 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 			// the adapter. Also specify this Activity object, which implements
 			// the TabListener interface, as the callback (listener) for when
 			// this tab is selected.
-			actionBar.addTab(
-					actionBar.newTab()
-							.setText(mPlaylistPagerAdapter.getPageTitle(i))
-							.setTabListener(this));
+			actionBar.addTab(actionBar.newTab()
+					.setText(mPlaylistPagerAdapter.getPageTitle(i))
+					.setTabListener(this));
 		}
 	}
 
@@ -150,8 +154,8 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.main, menu);
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
 
@@ -160,30 +164,34 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 
 		switch (item.getItemId()) {
 
-			case R.id.action_refresh:
-				// Add tab action
-				/*
-				 * PLAYLIST_COUNT = 4; mViewPager.setAdapter(null); mPlaylistPagerAdapter = new
-				 * PlayListPagerAdapter(getSupportFragmentManager()); mViewPager.setAdapter(mPlaylistPagerAdapter); //
-				 * mPlaylistPagerAdapter.notifyDataSetChanged(); mViewPager.invalidate();
-				 * addActionbarTabs(getSupportActionBar());
-				 */
-				break;
-			case R.id.action_settings:
-				startActivity(new Intent(this, AppPreferenceFragment.class));
-				break;
+		case R.id.action_refresh:
+			// Add tab action
+			/*
+			 * PLAYLIST_COUNT = 4; mViewPager.setAdapter(null);
+			 * mPlaylistPagerAdapter = new
+			 * PlayListPagerAdapter(getSupportFragmentManager());
+			 * mViewPager.setAdapter(mPlaylistPagerAdapter); //
+			 * mPlaylistPagerAdapter.notifyDataSetChanged();
+			 * mViewPager.invalidate(); addActionbarTabs(getSupportActionBar());
+			 */
+			break;
+		case R.id.action_settings:
+			startActivity(new Intent(this, AppPreferenceFragment.class));
+			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	/**
-	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the sections/tabs/pages.
+	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+	 * one of the sections/tabs/pages.
 	 */
 	public class PlayListPagerAdapter extends FragmentPagerAdapter {
 
 		private List<YoutubePlaylist> list;
 
-		public PlayListPagerAdapter(FragmentManager fm, List<YoutubePlaylist> list) {
+		public PlayListPagerAdapter(FragmentManager fm,
+				List<YoutubePlaylist> list) {
 			super(fm);
 			this.list = list;
 		}
@@ -193,7 +201,8 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 			// getItem is called to instantiate the fragment for the given page.
 			// Return a DummySectionFragment (defined as a static inner class
 			// below) with the page number as its lone argument.
-			Fragment fragment = new ListFragment(list.get(position));
+			Fragment fragment = new MyListFragment(
+					list.get(position));
 			return fragment;
 		}
 
@@ -203,7 +212,8 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 			return super.getItemId(position);
 
 			/*
-			 * switch (position) { case 0: case 1: case 2: return super.getItemId(position); case 3: return 4; }
+			 * switch (position) { case 0: case 1: case 2: return
+			 * super.getItemId(position); case 3: return 4; }
 			 */
 		}
 
@@ -223,52 +233,34 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 		}
 	}
 
-	/**
-	 * A dummy fragment representing a section of the app, but that simply displays dummy text.
-	 */
-	public static class DummySectionFragment extends Fragment {
-		/**
-		 * The fragment argument representing the section number for this fragment.
-		 */
-		public static final String ARG_SECTION_NUMBER = "section_number";
-
-		public DummySectionFragment() {
-		}
-
+	private BroadcastReceiver datareceiver = new BroadcastReceiver() {
 		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_main_dummy, container, false);
-			TextView dummyTextView = (TextView) rootView.findViewById(R.id.section_label);
-			dummyTextView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
-			return rootView;
+		public void onReceive(Context arg0, Intent arg1) {
+			Toast.makeText(getApplicationContext(), "received",
+					Toast.LENGTH_SHORT);
+			// onUpdateRecieve(getSupportActionBar());
+			addActionbarTabs(getActionBar());
+
 		}
+	};
+
+	@Override
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
-	public void onTabSelected(Tab tab, android.support.v4.app.FragmentTransaction ft) {
+	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		// When the given tab is selected, switch to the corresponding page in
 		// the ViewPager.
 		mViewPager.setCurrentItem(tab.getPosition());
 	}
 
 	@Override
-	public void onTabUnselected(Tab tab, android.support.v4.app.FragmentTransaction ft) {
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+
 	}
-
-	@Override
-	public void onTabReselected(Tab tab, android.support.v4.app.FragmentTransaction ft) {
-	}
-
-	private BroadcastReceiver datareceiver = new BroadcastReceiver() {
-
-		@Override
-		public void onReceive(Context arg0, Intent arg1) {
-			Toast.makeText(getApplicationContext(), "received", Toast.LENGTH_SHORT);
-			// onUpdateRecieve(getSupportActionBar());
-			addActionbarTabs(getSupportActionBar());
-
-		}
-	};
 
 }
