@@ -92,7 +92,8 @@ public class MainActivity extends FragmentActivity implements
 					.getDefaultSharedPreferences(MainActivity.this);
 			String userName = sharedPreferences.getString("userName",
 					"androiddev101");
-			List<YoutubePlaylist> list = lookup.getFullListByUser(userName, false);
+			boolean downloadThumbnail = sharedPreferences.getBoolean("downloadThumbnail", true);
+			List<YoutubePlaylist> list = lookup.getFullListByUser(userName, downloadThumbnail);
 			myYTDC.cacheThis(myCacheID, list);
 			return list;
 		}
@@ -168,6 +169,7 @@ public class MainActivity extends FragmentActivity implements
 		switch (item.getItemId()) {
 
 			case R.id.action_refresh:
+			new myAsyncTask().execute();
 				// Add tab action
 				/*
 				 * PLAYLIST_COUNT = 4; mViewPager.setAdapter(null); mPlaylistPagerAdapter = new
