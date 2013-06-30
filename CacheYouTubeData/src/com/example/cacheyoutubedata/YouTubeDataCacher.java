@@ -51,7 +51,8 @@ public class YouTubeDataCacher {
 			byte[] data = Base64.decode(jsonStr, 0);
 			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
 			Object o = ois.readObject();
-			ois.close();
+			//The  Close raises an exception!! Don't do it!!
+			//ois.close();
 			return o;
 		} catch (JsonSyntaxException e) {
 			// TODO Auto-generated catch block
