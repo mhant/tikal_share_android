@@ -1,9 +1,10 @@
 package com.tikal.share.youtube;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class YoutubeData {
+public class YoutubeData implements Serializable{
 	private String userName;
 	public YoutubeData(String userName) {
 		super();

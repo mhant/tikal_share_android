@@ -1,3 +1,4 @@
+
 package com.tikal.share;
 
 import java.util.List;
@@ -18,10 +19,16 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.cacheyoutubedata.PreferencesDataCacheStore;
+import com.example.cacheyoutubedata.YouTubeDataCacher;
 import com.tikal.share.youtube.LookupChannel;
 import com.tikal.share.youtube.YoutubePlaylist;
 
@@ -31,6 +38,10 @@ public class MainActivity extends FragmentActivity implements
 	PlayListPagerAdapter mPlaylistPagerAdapter;
 	ViewPager mViewPager;
 
+	private YouTubeDataCacher myYTDC = null;
+	private PreferencesDataCacheStore myPDCS = null;
+	private static String myCacheID = "my_youtube_cache";
+
 	private int PLAYLIST_COUNT = 3;
 	public static final String DATA_UPDATE = "data_update";
 	private IntentFilter filter = new IntentFilter(DATA_UPDATE);
@@ -39,6 +50,10 @@ public class MainActivity extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		// Create cache data store
+		myPDCS = new PreferencesDataCacheStore(this);
+		myYTDC = new YouTubeDataCacher(myPDCS);
 
 		// Set up the action bar.
 		final ActionBar actionBar = getActionBar();
@@ -54,6 +69,11 @@ public class MainActivity extends FragmentActivity implements
 		protected void onPreExecute() {
 			super.onPreExecute();
 			// Start Animation
+			List<YoutubePlaylist> list = (List<YoutubePlaylist>) myYTDC.unchacheThis(myCacheID);
+			if (list != null) {
+				onUpdateRecieve(getActionBar(), list);
+				addActionbarTabs(getActionBar());
+			}
 		}
 
 		protected void onPostExecute(List<YoutubePlaylist> result) {
@@ -68,10 +88,12 @@ public class MainActivity extends FragmentActivity implements
 		@Override
 		protected List<YoutubePlaylist> doInBackground(Void... params) {
 			LookupChannel lookup = new LookupChannel(false);
-			SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-			String userName = sharedPreferences.getString("userName", "androiddev101");
-			boolean downloadThumbnail = sharedPreferences.getBoolean("downloadThumbnail", true);
-			List<YoutubePlaylist> list = lookup.getFullListByUser(userName,downloadThumbnail);
+			SharedPreferences sharedPreferences = PreferenceManager
+					.getDefaultSharedPreferences(MainActivity.this);
+			String userName = sharedPreferences.getString("userName",
+					"androiddev101");
+			List<YoutubePlaylist> list = lookup.getFullListByUser(userName, false);
+			myYTDC.cacheThis(myCacheID, list);
 			return list;
 		}
 
@@ -145,28 +167,24 @@ public class MainActivity extends FragmentActivity implements
 
 		switch (item.getItemId()) {
 
-		case R.id.action_refresh:
-			new myAsyncTask().execute();
-			// Add tab action
-			/*
-			 * PLAYLIST_COUNT = 4; mViewPager.setAdapter(null);
-			 * mPlaylistPagerAdapter = new
-			 * PlayListPagerAdapter(getSupportFragmentManager());
-			 * mViewPager.setAdapter(mPlaylistPagerAdapter); //
-			 * mPlaylistPagerAdapter.notifyDataSetChanged();
-			 * mViewPager.invalidate(); addActionbarTabs(getSupportActionBar());
-			 */
-			break;
-		case R.id.action_settings:
-			startActivity(new Intent(this, AppPreferenceFragment.class));
-			break;
+			case R.id.action_refresh:
+				// Add tab action
+				/*
+				 * PLAYLIST_COUNT = 4; mViewPager.setAdapter(null); mPlaylistPagerAdapter = new
+				 * PlayListPagerAdapter(getSupportFragmentManager()); mViewPager.setAdapter(mPlaylistPagerAdapter); //
+				 * mPlaylistPagerAdapter.notifyDataSetChanged(); mViewPager.invalidate();
+				 * addActionbarTabs(getSupportActionBar());
+				 */
+				break;
+			case R.id.action_settings:
+				startActivity(new Intent(this, AppPreferenceFragment.class));
+				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	/**
-	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-	 * one of the sections/tabs/pages.
+	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the sections/tabs/pages.
 	 */
 	public class PlayListPagerAdapter extends FragmentPagerAdapter {
 
@@ -194,8 +212,7 @@ public class MainActivity extends FragmentActivity implements
 			return super.getItemId(position);
 
 			/*
-			 * switch (position) { case 0: case 1: case 2: return
-			 * super.getItemId(position); case 3: return 4; }
+			 * switch (position) { case 0: case 1: case 2: return super.getItemId(position); case 3: return 4; }
 			 */
 		}
 
