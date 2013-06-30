@@ -1,36 +1,43 @@
 package com.example.cacheyoutubedata;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 
+import com.tikal.share.youtube.LookupChannel;
+import com.tikal.share.youtube.YoutubePlaylist;
+
 public class MainActivity extends Activity {
 	private YouTubeDataCacher myYTDC = null;
 	private PreferencesDataCacheStore myPDCS = null;
 	private static String myCacheID = "my_youtube_cache";
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
 		myPDCS = new PreferencesDataCacheStore(this);
 		myYTDC = new YouTubeDataCacher(myPDCS);
-		
-		ArrayList<ArrayList<String>>ll = new ArrayList<ArrayList<String>>();
-		
-		
-		myYTDC.cacheThis(myCacheID, ll);
-		
-		Object r = myYTDC.unchacheThis(myCacheID);
-		Log.d("MAIN", r.getClass().getName());
-		
-		r = myYTDC.unchacheThis("lkjsdlfks");
-		
+
+		Thread r = new Thread() {
+			public void run() {
+				LookupChannel lookup = new LookupChannel(false);
+				List<YoutubePlaylist> list = lookup
+						.getFullListByUser("androiddev101");
+
+				
+				myYTDC.cacheThis(myCacheID, list);
+
+				Object r = myYTDC.unchacheThis(myCacheID);
+				Log.d("MAIN", r.getClass().getName());
+
+			}
+		};
+		r.start();
+
 	}
 
 	@Override

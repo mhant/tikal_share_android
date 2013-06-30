@@ -2,8 +2,8 @@ package com.tikal.share.youtube;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.Serializable;
 import java.io.StringReader;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,9 +21,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.AsyncTask;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import com.tikal.share.InfraException;
 
@@ -50,11 +49,16 @@ public class LookupChannel {
 		}
 	}
 
-	
-	public List<YoutubePlaylist> getFullListByUser(String userName){
+	public YoutubeData getYoutubeData(String userName,boolean downloadThumbNail){
+		YoutubeData result = new YoutubeData(userName);
+		result.setPlayList(getFullListByUser(userName,downloadThumbNail));
+		return result;
+	}
+
+	public List<YoutubePlaylist> getFullListByUser(String userName, boolean downloadThumbNail){
 		List<YoutubePlaylist> result = getPlayList(userName);
 		for (YoutubePlaylist youtubePlaylist : result){
-			youtubePlaylist.setYoutubeVideoInfo(getVideoList(youtubePlaylist.getId()));
+			youtubePlaylist.setYoutubeVideoInfo(getVideoList(youtubePlaylist.getId(),downloadThumbNail));
 		}
 		return result;
 	}
@@ -94,7 +98,7 @@ public class LookupChannel {
 		return null;
 	}
 	
-	public List<YoutubeVideoInfo> getVideoList(String playListId) {
+	public List<YoutubeVideoInfo> getVideoList(String playListId, boolean downloadThumbNail) {
 		List<YoutubeVideoInfo> list = new LinkedList<YoutubeVideoInfo>();
 		String sendRequest;
 		if (debugMode) {
@@ -121,7 +125,19 @@ public class LookupChannel {
 			Node descriptionNode = getByName(mediaGroup.getChildNodes(),"media:description");
 			
 			Integer duration = Integer.parseInt(durationNode.getAttributes().getNamedItem("seconds").getTextContent());
-			list.add(new YoutubeVideoInfo(videoId, title,descriptionNode.getTextContent(),thumbnail.getAttributes().getNamedItem("url").getTextContent(),published,duration));
+			YoutubeVideoInfo youtubeVideoInfo = new YoutubeVideoInfo(videoId, title,descriptionNode.getTextContent(),thumbnail.getAttributes().getNamedItem("url").getTextContent(),published,duration);
+			if (downloadThumbNail && youtubeVideoInfo.getThumbnail()!=null && youtubeVideoInfo.getThumbnail()!=""){
+				try{
+				URL newurl = new URL(youtubeVideoInfo.getThumbnail());
+				Bitmap decodeStream = BitmapFactory.decodeStream(newurl.openConnection() .getInputStream());
+				youtubeVideoInfo.setThumbnailBmp(decodeStream);
+				}
+				catch(Exception e){
+					throw new InfraException(e);
+				}
+			}
+			list.add(youtubeVideoInfo);
+
 		}
 
 		return list;

@@ -16,5 +16,8 @@
     
     <string name="preferences_title">Prefrences</string>
     <string name="user_name">YouTube User Name</string>
+    <string name="user_name_summary">YouTube User Name For Playlist</string>
+    <string name="download_thumbnail">Download Video Thumbnail</string>
+    <string name="download_thumbnail_summary">Download Video Thumbnail</string>
 
 </resources>
