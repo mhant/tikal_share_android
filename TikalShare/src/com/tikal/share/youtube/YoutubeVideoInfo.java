@@ -1,17 +1,18 @@
+
 package com.tikal.share.youtube;
 
 import java.io.Serializable;
 
 import android.graphics.Bitmap;
 
-public class YoutubeVideoInfo implements Serializable{
+public class YoutubeVideoInfo implements Serializable {
 	private String id;
 	private String title;
 	private String summary;
 	private String thumbnail;
 	private String published;
 	private Integer duration;
-	private Bitmap thumbnailBmp;
+	private transient Bitmap thumbnailBmp;
 
 	public YoutubeVideoInfo(String id, String title, String summary, String thumbnail, String published,
 			Integer duration) {
@@ -19,7 +20,7 @@ public class YoutubeVideoInfo implements Serializable{
 		this.id = id;
 		this.title = title;
 		this.summary = summary;
-		this.thumbnail = thumbnail!=null ? thumbnail.trim() : null;
+		this.thumbnail = thumbnail != null ? thumbnail.trim() : null;
 		this.published = published;
 		this.duration = duration;
 	}

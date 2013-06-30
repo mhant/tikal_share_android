@@ -108,12 +108,14 @@ public class MainActivity extends FragmentActivity implements
 			List<YoutubePlaylist> result) {
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
+
 		mPlaylistPagerAdapter = new PlayListPagerAdapter(
 				getSupportFragmentManager(), result);
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mPlaylistPagerAdapter);
+		mPlaylistPagerAdapter.notifyDataSetChanged();
 
 		// When swiping between different sections, select the corresponding
 		// tab. We can also use ActionBar.Tab#select() to do this if we have
@@ -169,7 +171,7 @@ public class MainActivity extends FragmentActivity implements
 		switch (item.getItemId()) {
 
 			case R.id.action_refresh:
-			new myAsyncTask().execute();
+				new myAsyncTask().execute();
 				// Add tab action
 				/*
 				 * PLAYLIST_COUNT = 4; mViewPager.setAdapter(null); mPlaylistPagerAdapter = new
