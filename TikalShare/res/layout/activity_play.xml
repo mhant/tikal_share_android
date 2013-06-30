@@ -1,14 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-     <com.google.android.youtube.player.YouTubePlayerView
-      android:id="@+id/youtube_view"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      />
+    android:background="@android:drawable/menu_frame" >
 
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/alert_light_frame"
+        android:padding="15dp"
+        android:layout_centerVertical="true"
+         >
 
+        <com.google.android.youtube.player.YouTubePlayerView
+            android:id="@+id/youtube_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
-
-</LinearLayout>
+</RelativeLayout>

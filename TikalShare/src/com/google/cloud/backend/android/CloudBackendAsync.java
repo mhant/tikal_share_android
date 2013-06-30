@@ -24,6 +24,7 @@ import android.util.Log;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.cloud.backend.android.CloudQuery.Order;
 import com.google.cloud.backend.android.CloudQuery.Scope;
+import com.tikal.share.GCMIntentService;
 
 import java.io.IOException;
 import java.util.HashMap;
