@@ -1,13 +1,16 @@
 
 package com.tikal.share;
 
-import java.util.Locale;
+import java.util.List;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -22,6 +25,8 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.tikal.share.youtube.LookupChannel;
+import com.tikal.share.youtube.YoutubePlaylist;
 
 public class MainActivity extends SherlockFragmentActivity implements ActionBar.TabListener {
 
@@ -40,10 +45,47 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 		// Set up the action bar.
 		final ActionBar actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		// actionBar.
 
+		new myAsyncTask().execute();
+	}
+
+	class myAsyncTask extends AsyncTask<Void, Void, List<YoutubePlaylist>> {
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			// Start Animation
+		}
+
+		protected void onPostExecute(List<YoutubePlaylist> result) {
+			// Stop Animation
+			Toast.makeText(getApplicationContext(), "blal", 1).show();
+			// Parse the data
+			PLAYLIST_COUNT = result.size();
+			onUpdateRecieve(getSupportActionBar(), result);
+			addActionbarTabs(getSupportActionBar());
+		}
+
+		@Override
+		protected List<YoutubePlaylist> doInBackground(Void... params) {
+			LookupChannel lookup = new LookupChannel(false);
+	        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+	        String userName = sharedPreferences.getString("userName", "androiddev101");
+			List<YoutubePlaylist> list = lookup.getFullListByUser(userName);
+			return list;
+		}
+
+	}
+
+	/**
+	 * @param actionBar
+	 * @param result
+	 */
+	private void onUpdateRecieve(final ActionBar actionBar, List<YoutubePlaylist> result) {
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
-		mPlaylistPagerAdapter = new PlayListPagerAdapter(getSupportFragmentManager());
+		mPlaylistPagerAdapter = new PlayListPagerAdapter(getSupportFragmentManager(), result);
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -58,8 +100,6 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 				actionBar.setSelectedNavigationItem(position);
 			}
 		});
-
-		addActionbarTabs(actionBar);
 	}
 
 	/**
@@ -106,17 +146,15 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 
 			case R.id.action_refresh:
 				// Add tab action
-				PLAYLIST_COUNT = 4;
-				mViewPager.setAdapter(null);
-				mPlaylistPagerAdapter = new PlayListPagerAdapter(getSupportFragmentManager());
-				mViewPager.setAdapter(mPlaylistPagerAdapter);
-				// mPlaylistPagerAdapter.notifyDataSetChanged();
-				mViewPager.invalidate();
-				addActionbarTabs(getSupportActionBar());
+				/*
+				 * PLAYLIST_COUNT = 4; mViewPager.setAdapter(null); mPlaylistPagerAdapter = new
+				 * PlayListPagerAdapter(getSupportFragmentManager()); mViewPager.setAdapter(mPlaylistPagerAdapter); //
+				 * mPlaylistPagerAdapter.notifyDataSetChanged(); mViewPager.invalidate();
+				 * addActionbarTabs(getSupportActionBar());
+				 */
 				break;
 			case R.id.action_settings:
-				sendBroadcast(new Intent(DATA_UPDATE));
-				Toast.makeText(this, "Setting", Toast.LENGTH_SHORT).show();
+				startActivity(new Intent(this, AppPreferenceFragment.class));
 				break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -127,8 +165,11 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 	 */
 	public class PlayListPagerAdapter extends FragmentPagerAdapter {
 
-		public PlayListPagerAdapter(FragmentManager fm) {
+		private List<YoutubePlaylist> list;
+
+		public PlayListPagerAdapter(FragmentManager fm, List<YoutubePlaylist> list) {
 			super(fm);
+			this.list = list;
 		}
 
 		@Override
@@ -136,25 +177,18 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 			// getItem is called to instantiate the fragment for the given page.
 			// Return a DummySectionFragment (defined as a static inner class
 			// below) with the page number as its lone argument.
-			Fragment fragment = new ListFragment();
-			Bundle args = new Bundle();
-			args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
-			fragment.setArguments(args);
+			Fragment fragment = new ListFragment(list.get(position));
 			return fragment;
 		}
 
 		@Override
 		public long getItemId(int position) {
 
-			switch (position) {
-				case 0:
-				case 1:
-				case 2:
-					return super.getItemId(position);
-				case 3:
-					return 4;
-			}
-			return position;
+			return super.getItemId(position);
+
+			/*
+			 * switch (position) { case 0: case 1: case 2: return super.getItemId(position); case 3: return 4; }
+			 */
 		}
 
 		@Override
@@ -164,24 +198,12 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 
 		@Override
 		public int getCount() {
-			// Show 3 total pages.
 			return PLAYLIST_COUNT;
 		}
 
 		@Override
 		public CharSequence getPageTitle(int position) {
-			Locale l = Locale.getDefault();
-			switch (position) {
-				case 0:
-					return getString(R.string.title_section1).toUpperCase(l);
-				case 1:
-					return getString(R.string.title_section2).toUpperCase(l);
-				case 2:
-					return getString(R.string.title_section3).toUpperCase(l);
-				case 3:
-					return getString(R.string.title_section4).toUpperCase(l);
-			}
-			return null;
+			return list.get(position).getTitle();
 		}
 	}
 
@@ -223,9 +245,13 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 	}
 
 	private BroadcastReceiver datareceiver = new BroadcastReceiver() {
+
 		@Override
-		public void onReceive(Context context, Intent intent) {
+		public void onReceive(Context arg0, Intent arg1) {
 			Toast.makeText(getApplicationContext(), "received", Toast.LENGTH_SHORT);
+			// onUpdateRecieve(getSupportActionBar());
+			addActionbarTabs(getSupportActionBar());
+
 		}
 	};
 

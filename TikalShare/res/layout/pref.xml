@@ -1,0 +1,12 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/preferences_title" >
+
+        <EditTextPreference
+            android:id="@+id/userNameX"
+            android:defaultValue="androiddev101"
+            android:key="userName"
+            android:title="@string/user_name" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
