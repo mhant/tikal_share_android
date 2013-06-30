@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class YoutubePlaylist implements Serializable {
+public class YoutubePlaylist {
 	private String title;
 	private String id;
 	private List<YoutubeVideoInfo> youtubeVideoInfo = new LinkedList<YoutubeVideoInfo>(); 

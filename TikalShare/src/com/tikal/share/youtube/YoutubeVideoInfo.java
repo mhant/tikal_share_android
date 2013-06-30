@@ -2,7 +2,7 @@ package com.tikal.share.youtube;
 
 import java.io.Serializable;
 
-public class YoutubeVideoInfo implements Serializable{
+public class YoutubeVideoInfo {
 	private String id;
 	private String title;
 	private String summary;

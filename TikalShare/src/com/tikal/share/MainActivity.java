@@ -25,6 +25,8 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.example.cacheyoutubedata.PreferencesDataCacheStore;
+import com.example.cacheyoutubedata.YouTubeDataCacher;
 import com.tikal.share.youtube.LookupChannel;
 import com.tikal.share.youtube.YoutubePlaylist;
 
@@ -37,10 +39,18 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 	public static final String DATA_UPDATE = "data_update";
 	private IntentFilter filter = new IntentFilter(DATA_UPDATE);
 
+	private YouTubeDataCacher myYTDC = null;
+	private PreferencesDataCacheStore myPDCS = null;
+	private static String myCacheID = "my_youtube_cache";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		// Create cache data store
+		myPDCS = new PreferencesDataCacheStore(this);
+		myYTDC = new YouTubeDataCacher(myPDCS);
 
 		// Set up the action bar.
 		final ActionBar actionBar = getSupportActionBar();
@@ -56,11 +66,17 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 		protected void onPreExecute() {
 			super.onPreExecute();
 			// Start Animation
+			List<YoutubePlaylist> list = (List<YoutubePlaylist>) myYTDC.unchacheThis(myCacheID);
+			if (list != null) {
+				onUpdateRecieve(getSupportActionBar(), list);
+				addActionbarTabs(getSupportActionBar());
+			}
+
 		}
 
 		protected void onPostExecute(List<YoutubePlaylist> result) {
 			// Stop Animation
-			Toast.makeText(getApplicationContext(), "blal", 1).show();
+
 			// Parse the data
 			PLAYLIST_COUNT = result.size();
 			onUpdateRecieve(getSupportActionBar(), result);
@@ -71,6 +87,8 @@ public class MainActivity extends SherlockFragmentActivity implements ActionBar.
 		protected List<YoutubePlaylist> doInBackground(Void... params) {
 			LookupChannel lookup = new LookupChannel(false);
 			List<YoutubePlaylist> list = lookup.getFullListByUser("androiddev101");
+			myYTDC.cacheThis(myCacheID, list);
+
 			return list;
 		}
 
