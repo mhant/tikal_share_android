@@ -11,7 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.google.cloud.backend.android;
+package com.tikal.share;
 
 import android.app.Application;
 import android.content.Context;
@@ -20,6 +20,8 @@ import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
 import com.google.android.gcm.GCMRegistrar;
+import com.google.cloud.backend.android.CloudBackendAsync;
+import com.google.cloud.backend.android.Consts;
 
 import java.util.concurrent.CountDownLatch;
 

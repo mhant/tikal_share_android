@@ -47,7 +47,7 @@
         </activity>
 
 
-        <service android:name="com.google.cloud.backend.android.GCMIntentService" />
+        <service android:name="com.tikal.share.GCMIntentService" />
 
         <receiver
             android:name="com.google.android.gcm.GCMBroadcastReceiver"
