@@ -3,10 +3,18 @@
     <PreferenceCategory android:title="@string/preferences_title" >
 
         <EditTextPreference
-            android:id="@+id/userNameX"
+            android:id="@+id/userName"
             android:defaultValue="androiddev101"
             android:key="userName"
-            android:title="@string/user_name" />
+            android:title="@string/user_name" 
+            android:summary="@string/user_name_summary"/>
+
+        <CheckBoxPreference
+            android:id="@+id/downloadThumbnail"
+            android:defaultValue="true"
+            android:key="downloadThumbnail"
+            android:summary="@string/download_thumbnail"
+            android:title="@string/download_thumbnail_summary" />
     </PreferenceCategory>
 
 </PreferenceScreen>
