@@ -13,11 +13,11 @@
  */
 package com.google.cloud.backend.android;
 
-import com.google.cloud.backend.android.mobilebackend.model.FilterDto;
-
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+
+import com.google.cloud.backend.android.mobilebackend.model.FilterDto;
 
 /**
  * A filter class for a {@link CloudQuery}. See

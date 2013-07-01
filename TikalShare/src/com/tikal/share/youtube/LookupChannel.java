@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URL;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -52,6 +53,7 @@ public class LookupChannel {
 	public YoutubeData getYoutubeData(String userName,boolean downloadThumbNail){
 		YoutubeData result = new YoutubeData(userName);
 		result.setPlayList(getFullListByUser(userName,downloadThumbNail));
+		result.setUpdated(new Date());
 		return result;
 	}
 

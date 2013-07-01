@@ -17,7 +17,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.cloud.backend.android.tikal.share.sync.CloudSync;
 import com.tikal.share.youtube.YoutubePlaylist;

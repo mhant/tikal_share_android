@@ -13,6 +13,8 @@
  */
 package com.google.cloud.backend.android;
 
+import java.util.List;
+
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Intent;
@@ -20,8 +22,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-
-import java.util.List;
 
 /**
  * An {@link Activity} class that wraps CloudBackend features including CRUD of

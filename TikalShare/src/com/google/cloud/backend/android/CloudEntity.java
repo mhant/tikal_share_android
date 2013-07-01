@@ -13,12 +13,12 @@
  */
 package com.google.cloud.backend.android;
 
-import com.google.api.client.util.DateTime;
-import com.google.cloud.backend.android.mobilebackend.model.EntityDto;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.google.api.client.util.DateTime;
+import com.google.cloud.backend.android.mobilebackend.model.EntityDto;
 
 /**
  * A class that represents a cloud entity on App Engine Datastore.

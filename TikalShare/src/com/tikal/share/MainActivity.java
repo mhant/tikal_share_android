@@ -1,7 +1,8 @@
-
 package com.tikal.share;
 
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -19,32 +20,30 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cacheyoutubedata.PreferencesDataCacheStore;
 import com.example.cacheyoutubedata.YouTubeDataCacher;
 import com.tikal.share.youtube.LookupChannel;
+import com.tikal.share.youtube.YoutubeData;
 import com.tikal.share.youtube.YoutubePlaylist;
 
-public class MainActivity extends FragmentActivity implements
-		ActionBar.TabListener {
+public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
 	PlayListPagerAdapter mPlaylistPagerAdapter;
 	ViewPager mViewPager;
 
 	private YouTubeDataCacher myYTDC = null;
 	private PreferencesDataCacheStore myPDCS = null;
-	private static String myCacheID = "my_youtube_cache";
+	// private static String myCacheID = "my_youtube_cache";
 
-	private int PLAYLIST_COUNT = 3;
+	private int playListCount = 3;
 	public static final String DATA_UPDATE = "data_update";
 	private IntentFilter filter = new IntentFilter(DATA_UPDATE);
+
+	private YoutubeAsyncTask youtubeAsyncTask = new YoutubeAsyncTask();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,58 +58,79 @@ public class MainActivity extends FragmentActivity implements
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		// actionBar.
-
-		new myAsyncTask().execute();
+		YoutubeData youtubeData = myYTDC.loadFromFile(MainActivity.this);
+		updateGUIWithData(youtubeData);
+		Date now = new Date();
+		if (now.getTime() - youtubeData.getUpdated().getTime() > 60 * 60 * 1000) {
+			youtubeAsyncTask.doExecute();
+		}
 	}
 
-	class myAsyncTask extends AsyncTask<Void, Void, List<YoutubePlaylist>> {
+	class YoutubeAsyncTask extends AsyncTask<Void, Void, YoutubeData> {
+		private AtomicBoolean gettingData = new AtomicBoolean(false);
+
+		public void doExecute() {
+			if (!gettingData.get()) {
+				gettingData.set(true);
+				Toast.makeText(getApplicationContext(), "Refreshing data in background", Toast.LENGTH_LONG).show();
+				execute();
+			} else {
+				Toast.makeText(getApplicationContext(), "Already getting data", Toast.LENGTH_LONG).show();
+			}
+		}
 
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
 			// Start Animation
-			// Tomer: disable cache loader for testing  
-//			List<YoutubePlaylist> list = (List<YoutubePlaylist>) myYTDC.unchacheThis(myCacheID);
-//			if (list != null) {
-//				onUpdateRecieve(getActionBar(), list);
-//				addActionbarTabs(getActionBar());
-//			}
+			// Tomer: disable cache loader for testing
+			// List<YoutubePlaylist> list = (List<YoutubePlaylist>)
+			// myYTDC.unchacheThis(myCacheID);
+			// if (list != null) {
+			// onUpdateRecieve(getActionBar(), list);
+			// addActionbarTabs(getActionBar());
+			// }
 		}
 
-		protected void onPostExecute(List<YoutubePlaylist> result) {
+		protected void onPostExecute(YoutubeData result) {
 			// Stop Animation
-//			Toast.makeText(getApplicationContext(), "blal", 1).show();
+			// Toast.makeText(getApplicationContext(), "blal", 1).show();
 			// Parse the data
-			PLAYLIST_COUNT = result.size();
-			onUpdateRecieve(getActionBar(), result);
-			addActionbarTabs(getActionBar());
+			updateGUIWithData(result);
+			gettingData.set(false);
 		}
 
 		@Override
-		protected List<YoutubePlaylist> doInBackground(Void... params) {
+		protected YoutubeData doInBackground(Void... params) {
 			LookupChannel lookup = new LookupChannel(false);
-			SharedPreferences sharedPreferences = PreferenceManager
-					.getDefaultSharedPreferences(MainActivity.this);
-			String userName =	"androiddev101";//enter channel name here
+			SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+			String userName = "androiddev101";// enter channel name here
 			boolean downloadThumbnail = sharedPreferences.getBoolean("downloadThumbnail", true);
-			List<YoutubePlaylist> list = lookup.getFullListByUser(userName, downloadThumbnail);
-			myYTDC.cacheThis(myCacheID, list);
-			return list;
+			YoutubeData youtubeData = lookup.getYoutubeData(userName, downloadThumbnail);
+			myYTDC.saveToFile(youtubeData, MainActivity.this);
+			// myYTDC.cacheThis(myCacheID, youtubeData);
+			return youtubeData;
 		}
 
+	}
+
+	private void updateGUIWithData(YoutubeData result) {
+		if (result != null) {
+			playListCount = result.getPlayList().size();
+			onUpdateRecieve(getActionBar(), result.getPlayList());
+			addActionbarTabs(getActionBar());
+		}
 	}
 
 	/**
 	 * @param actionBar
 	 * @param result
 	 */
-	private void onUpdateRecieve(final ActionBar actionBar,
-			List<YoutubePlaylist> result) {
+	private void onUpdateRecieve(final ActionBar actionBar, List<YoutubePlaylist> result) {
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
 
-		mPlaylistPagerAdapter = new PlayListPagerAdapter(
-				getSupportFragmentManager(), result);
+		mPlaylistPagerAdapter = new PlayListPagerAdapter(getSupportFragmentManager(), result);
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -120,13 +140,12 @@ public class MainActivity extends FragmentActivity implements
 		// When swiping between different sections, select the corresponding
 		// tab. We can also use ActionBar.Tab#select() to do this if we have
 		// a reference to the Tab.
-		mViewPager
-				.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-					@Override
-					public void onPageSelected(int position) {
-						actionBar.setSelectedNavigationItem(position);
-					}
-				});
+		mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+			@Override
+			public void onPageSelected(int position) {
+				actionBar.setSelectedNavigationItem(position);
+			}
+		});
 	}
 
 	/**
@@ -141,9 +160,7 @@ public class MainActivity extends FragmentActivity implements
 			// the adapter. Also specify this Activity object, which implements
 			// the TabListener interface, as the callback (listener) for when
 			// this tab is selected.
-			actionBar.addTab(actionBar.newTab()
-					.setText(mPlaylistPagerAdapter.getPageTitle(i))
-					.setTabListener(this));
+			actionBar.addTab(actionBar.newTab().setText(mPlaylistPagerAdapter.getPageTitle(i)).setTabListener(this));
 		}
 	}
 
@@ -170,32 +187,34 @@ public class MainActivity extends FragmentActivity implements
 
 		switch (item.getItemId()) {
 
-			case R.id.action_refresh:
-				new myAsyncTask().execute();
-				// Add tab action
-				/*
-				 * PLAYLIST_COUNT = 4; mViewPager.setAdapter(null); mPlaylistPagerAdapter = new
-				 * PlayListPagerAdapter(getSupportFragmentManager()); mViewPager.setAdapter(mPlaylistPagerAdapter); //
-				 * mPlaylistPagerAdapter.notifyDataSetChanged(); mViewPager.invalidate();
-				 * addActionbarTabs(getSupportActionBar());
-				 */
-				break;
-			case R.id.action_settings:
-				startActivity(new Intent(this, AppPreferenceFragment.class));
-				break;
+		case R.id.action_refresh:
+			youtubeAsyncTask.doExecute();
+			// Add tab action
+			/*
+			 * PLAYLIST_COUNT = 4; mViewPager.setAdapter(null);
+			 * mPlaylistPagerAdapter = new
+			 * PlayListPagerAdapter(getSupportFragmentManager());
+			 * mViewPager.setAdapter(mPlaylistPagerAdapter); //
+			 * mPlaylistPagerAdapter.notifyDataSetChanged();
+			 * mViewPager.invalidate(); addActionbarTabs(getSupportActionBar());
+			 */
+			break;
+		case R.id.action_settings:
+			startActivity(new Intent(this, AppPreferenceFragment.class));
+			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	/**
-	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the sections/tabs/pages.
+	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+	 * one of the sections/tabs/pages.
 	 */
 	public class PlayListPagerAdapter extends FragmentPagerAdapter {
 
 		private List<YoutubePlaylist> list;
 
-		public PlayListPagerAdapter(FragmentManager fm,
-				List<YoutubePlaylist> list) {
+		public PlayListPagerAdapter(FragmentManager fm, List<YoutubePlaylist> list) {
 			super(fm);
 			this.list = list;
 		}
@@ -205,8 +224,7 @@ public class MainActivity extends FragmentActivity implements
 			// getItem is called to instantiate the fragment for the given page.
 			// Return a DummySectionFragment (defined as a static inner class
 			// below) with the page number as its lone argument.
-			Fragment fragment = new MyListFragment(
-					list.get(position));
+			Fragment fragment = new MyListFragment(list.get(position));
 			return fragment;
 		}
 
@@ -221,7 +239,8 @@ public class MainActivity extends FragmentActivity implements
 			return super.getItemId(position);
 
 			/*
-			 * switch (position) { case 0: case 1: case 2: return super.getItemId(position); case 3: return 4; }
+			 * switch (position) { case 0: case 1: case 2: return
+			 * super.getItemId(position); case 3: return 4; }
 			 */
 		}
 
@@ -232,7 +251,7 @@ public class MainActivity extends FragmentActivity implements
 
 		@Override
 		public int getCount() {
-			return PLAYLIST_COUNT;
+			return playListCount;
 		}
 
 		@Override
@@ -244,8 +263,7 @@ public class MainActivity extends FragmentActivity implements
 	private BroadcastReceiver datareceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context arg0, Intent arg1) {
-			Toast.makeText(getApplicationContext(), "received",
-					Toast.LENGTH_SHORT);
+			Toast.makeText(getApplicationContext(), "received", Toast.LENGTH_SHORT);
 			// onUpdateRecieve(getSupportActionBar());
 			addActionbarTabs(getActionBar());
 
