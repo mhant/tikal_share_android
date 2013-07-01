@@ -20,7 +20,7 @@ import com.tikal.share.youtube.YoutubeData;
 
 public class YouTubeDataCacher {
 	private AbstractDataCacheStore myStore;
-	private static String FILE_NAME = "tikal.youtube.5";
+	private static String FILE_NAME = "tikal.youtube";
 
 	public YouTubeDataCacher(AbstractDataCacheStore myStore) {
 		this.myStore = myStore;

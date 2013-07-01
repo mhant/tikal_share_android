@@ -6,15 +6,24 @@
             android:id="@+id/userName"
             android:defaultValue="default"
             android:key="userName"
-            android:title="@string/user_name" 
-            android:summary="@string/user_name_summary"/>
+            android:summary="@string/user_name_summary"
+            android:title="@string/user_name" />
 
         <CheckBoxPreference
             android:id="@+id/downloadThumbnail"
             android:defaultValue="true"
             android:key="downloadThumbnail"
-            android:summary="@string/download_thumbnail"
-            android:title="@string/download_thumbnail_summary" />
+            android:summary="@string/download_thumbnail_summary"
+            android:title="@string/download_thumbnail" />
+        
+        <EditTextPreference
+            android:id="@+id/chacheTime"
+            android:inputType="numberSigned"
+            android:defaultValue="24"
+            android:key="cacheTimeout"
+            android:summary="@string/cache_timeout_summary"
+            android:title="@string/cache_timeout" />
+        
     </PreferenceCategory>
 
 </PreferenceScreen>

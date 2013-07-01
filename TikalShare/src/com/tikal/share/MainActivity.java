@@ -32,8 +32,10 @@ import com.tikal.share.youtube.YoutubePlaylist;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
-	PlayListPagerAdapter mPlaylistPagerAdapter;
-	ViewPager mViewPager;
+	private PlayListPagerAdapter mPlaylistPagerAdapter;
+	private ViewPager mViewPager;
+	private String userName;
+	private boolean downloadThumbnail;
 
 	private YouTubeDataCacher myYTDC = null;
 	private PreferencesDataCacheStore myPDCS = null;
@@ -60,8 +62,19 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		// actionBar.
 		YoutubeData youtubeData = myYTDC.loadFromFile(MainActivity.this);
 		updateGUIWithData(youtubeData);
-		Date now = new Date();
-		if (now.getTime() - youtubeData.getUpdated().getTime() > 60 * 60 * 1000) {
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+		userName = "androiddev101";// enter channel name here
+		downloadThumbnail = sharedPreferences.getBoolean("downloadThumbnail", true);
+		
+		boolean update = true;
+		if (youtubeData != null) {
+			String temp = sharedPreferences.getString("cacheTimeout", "24");
+			int cacheTimeout = Integer.parseInt(temp);
+
+			Date now = new Date();
+			update = now.getTime() - youtubeData.getUpdated().getTime() > cacheTimeout * 60 * 60 * 1000; 
+		}
+		if (update) {
 			youtubeAsyncTask.doExecute();
 		}
 	}
@@ -103,9 +116,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		@Override
 		protected YoutubeData doInBackground(Void... params) {
 			LookupChannel lookup = new LookupChannel(false);
-			SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-			String userName = "androiddev101";// enter channel name here
-			boolean downloadThumbnail = sharedPreferences.getBoolean("downloadThumbnail", true);
+			
 			YoutubeData youtubeData = lookup.getYoutubeData(userName, downloadThumbnail);
 			myYTDC.saveToFile(youtubeData, MainActivity.this);
 			// myYTDC.cacheThis(myCacheID, youtubeData);
@@ -188,6 +199,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		switch (item.getItemId()) {
 
 		case R.id.action_refresh:
+			SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+			userName = "androiddev101";// enter channel name here
+			downloadThumbnail = sharedPreferences.getBoolean("downloadThumbnail", true);
 			youtubeAsyncTask.doExecute();
 			// Add tab action
 			/*
