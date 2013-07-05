@@ -1,6 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
+        android:id="@+id/menu_spinner"
+        android:actionLayout="@layout/menu_loading_animation"
+        android:showAsAction="always"
+        android:title="@string/action_loading"
+        android:visible="true"/>
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:showAsAction="never"

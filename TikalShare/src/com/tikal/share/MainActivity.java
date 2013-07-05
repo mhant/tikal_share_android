@@ -24,6 +24,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +47,8 @@ public class MainActivity extends FragmentActivity implements
 	private int PLAYLIST_COUNT = 3;
 	public static final String DATA_UPDATE = "data_update";
 	private IntentFilter filter = new IntentFilter(DATA_UPDATE);
+	
+	private MenuItem menuSpinner;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +63,6 @@ public class MainActivity extends FragmentActivity implements
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		// actionBar.
-
-		new myAsyncTask().execute();
 	}
 
 	class myAsyncTask extends AsyncTask<Void, Void, List<YoutubePlaylist>> {
@@ -69,9 +71,15 @@ public class MainActivity extends FragmentActivity implements
 		protected void onPreExecute() {
 			super.onPreExecute();
 			// Start Animation
+			menuSpinner.setVisible(true);
+			Animation rotation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rotate);
+			rotation.setRepeatCount(Animation.INFINITE);
+			View animateView = menuSpinner.getActionView();
+			animateView.findViewById(R.id.loadingSpinner).startAnimation(rotation);
+			animateView.setVisibility(View.VISIBLE);
 			// Tomer: disable cache loader for testing  
-//			List<YoutubePlaylist> list = (List<YoutubePlaylist>) myYTDC.unchacheThis(myCacheID);
-//			if (list != null) {
+			//			List<YoutubePlaylist> list = (List<YoutubePlaylist>) myYTDC.unchacheThis(myCacheID);
+			//			if (list != null) {
 //				onUpdateRecieve(getActionBar(), list);
 //				addActionbarTabs(getActionBar());
 //			}
@@ -79,6 +87,10 @@ public class MainActivity extends FragmentActivity implements
 
 		protected void onPostExecute(List<YoutubePlaylist> result) {
 			// Stop Animation
+			menuSpinner.setVisible(false);
+			View animateView = menuSpinner.getActionView();
+			animateView.findViewById(R.id.loadingSpinner).clearAnimation();
+			animateView.setVisibility(View.GONE);
 //			Toast.makeText(getApplicationContext(), "blal", 1).show();
 			// Parse the data
 			PLAYLIST_COUNT = result.size();
@@ -162,6 +174,10 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
+		menuSpinner = menu.findItem( R.id.menu_spinner);
+		//calling data sync after options menu is created to deal 
+		//with loading indications
+		new myAsyncTask().execute();
 		return true;
 	}
 
