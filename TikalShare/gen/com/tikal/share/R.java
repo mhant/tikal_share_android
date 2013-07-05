@@ -28,12 +28,13 @@ public final class R {
         public static final int loading_spinner=0x7f020001;
     }
     public static final class id {
-        public static final int action_refresh=0x7f0a000f;
-        public static final int action_settings=0x7f0a000e;
+        public static final int action_refresh=0x7f0a0010;
+        public static final int action_settings=0x7f0a000f;
+        public static final int chacheTime=0x7f0a000d;
         public static final int downloadThumbnail=0x7f0a000c;
         public static final int linearLayout1=0x7f0a0001;
         public static final int loadingSpinner=0x7f0a000a;
-        public static final int menu_spinner=0x7f0a000d;
+        public static final int menu_spinner=0x7f0a000e;
         public static final int pager=0x7f0a0000;
         public static final int progressBar1=0x7f0a0003;
         public static final int section_label=0x7f0a0004;
@@ -65,6 +66,8 @@ public final class R {
         public static final int action_refresh=0x7f070007;
         public static final int action_settings=0x7f070006;
         public static final int app_name=0x7f070004;
+        public static final int cache_timeout=0x7f070011;
+        public static final int cache_timeout_summary=0x7f070012;
         public static final int download_thumbnail=0x7f07000f;
         public static final int download_thumbnail_summary=0x7f070010;
         public static final int emptystring=0x7f070003;

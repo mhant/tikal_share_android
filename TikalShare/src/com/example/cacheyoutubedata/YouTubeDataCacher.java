@@ -2,17 +2,25 @@ package com.example.cacheyoutubedata;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
 
+import android.content.Context;
 import android.util.Base64;
 
 import com.google.gson.JsonSyntaxException;
+import com.tikal.share.InfraException;
+import com.tikal.share.youtube.YoutubeData;
 
 public class YouTubeDataCacher {
 	private AbstractDataCacheStore myStore;
+	private static String FILE_NAME = "tikal.youtube";
 
 	public YouTubeDataCacher(AbstractDataCacheStore myStore) {
 		this.myStore = myStore;
@@ -26,8 +34,7 @@ public class YouTubeDataCacher {
 			oos.writeObject(obj);
 			oos.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new InfraException(e);
 		}
 		String jsonStr = Base64.encodeToString(baos.toByteArray(), 0);
 		String objClass = obj.getClass().getName();
@@ -51,8 +58,8 @@ public class YouTubeDataCacher {
 			byte[] data = Base64.decode(jsonStr, 0);
 			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
 			Object o = ois.readObject();
-			//The  Close raises an exception!! Don't do it!!
-			//ois.close();
+			// The Close raises an exception!! Don't do it!!
+			// ois.close();
 			return o;
 		} catch (JsonSyntaxException e) {
 			// TODO Auto-generated catch block
@@ -68,6 +75,63 @@ public class YouTubeDataCacher {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public void saveToFile(YoutubeData obj, Context context) {
+		final File file = new File(context.getCacheDir(), FILE_NAME);
+		FileOutputStream outputStream = null;
+		ObjectOutputStream objectOutputStream = null;
+
+		try {
+			outputStream = new FileOutputStream(file);
+			objectOutputStream = new ObjectOutputStream(outputStream);
+			obj.write(objectOutputStream);
+		}
+
+		catch (Exception e) {
+			throw new InfraException(e);
+		} finally {
+			try {
+				if (objectOutputStream != null) {
+					objectOutputStream.close();
+				}
+				if (outputStream != null) {
+					outputStream.close();
+				}
+			} catch (Exception e) {
+				throw new InfraException(e);
+			}
+		}
+	}
+
+	public YoutubeData loadFromFile(Context context) {
+		final File file = new File(context.getCacheDir(), FILE_NAME);
+		FileInputStream inputStream = null;
+		ObjectInputStream objectInputStream = null;
+
+		try {
+			inputStream = new FileInputStream(file);
+			objectInputStream = new ObjectInputStream(inputStream);
+
+			YoutubeData youtubeData = new YoutubeData();
+			youtubeData.read(objectInputStream);
+			return youtubeData;
+		} catch (FileNotFoundException f) {
+			return null;
+		} catch (Exception e) {
+			throw new InfraException(e);
+		} finally {
+			try {
+				if (objectInputStream != null) {
+					objectInputStream.close();
+				}
+				if (inputStream != null) {
+					inputStream.close();
+				}
+			} catch (Exception e) {
+				throw new InfraException(e);
+			}
+		}
 	}
 
 }
