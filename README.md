@@ -1,7 +1,18 @@
 Tikal Share (Android)
 ===================
 
-Just some examples right now, more to come.
+Tikal Share is an android (can be expanded to other platforms) application which
+presents the user with an interactive and responsive view of Tikal YouTube channel content.
+
+The responsive designed video summary view presents pages of each playlist on the 
+Tikal YouTube channel.  Clicking on a video opens the YouTube Player view which
+uses the YouTube Android API.
+
+Also using Google Backend Starter the option is added to the application to apply
+a user name to the application which will sync the 'watched until' place in each
+video among other Android devices with the same user applied.
+
+
 
 
 
