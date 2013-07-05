@@ -9,6 +9,7 @@
         android:id="@+id/video_image"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_marginRight="5dp"
         android:src="@drawable/ic_launcher" />
 
     <TextView
