@@ -14,10 +14,8 @@
 package com.google.cloud.backend.android.tikal.share.sync;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -50,7 +48,7 @@ public class CloudSync extends CloudBackendActivity {
 	public static final String INTENT_CLIENT_ID = "client_id";
 
 	// data formatter for formatting createdAt property
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss ", Locale.US);
+//	private static final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss ", Locale.US);
 
 	private static final String BROADCAST_PROP_DURATION = "duration";
 

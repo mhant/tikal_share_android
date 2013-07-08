@@ -90,12 +90,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			View animateView = menuSpinner.getActionView();
 			animateView.findViewById(R.id.loadingSpinner).startAnimation(rotation);
 			animateView.setVisibility(View.VISIBLE);
-			// Tomer: disable cache loader for testing  
-			//			List<YoutubePlaylist> list = (List<YoutubePlaylist>) myYTDC.unchacheThis(myCacheID);
-			//			if (list != null) {
-//				onUpdateRecieve(getActionBar(), list);
-//				addActionbarTabs(getActionBar());
-//			}
 		}
 
 		protected void onPostExecute(YoutubeData result) {
@@ -104,7 +98,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			View animateView = menuSpinner.getActionView();
 			animateView.findViewById(R.id.loadingSpinner).clearAnimation();
 			animateView.setVisibility(View.GONE);
-//			Toast.makeText(getApplicationContext(), "blal", 1).show();
 			// Parse the data
 			updateGUIWithData(result);
 			gettingData.set(false);

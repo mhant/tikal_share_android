@@ -24,7 +24,7 @@ import com.tikal.share.youtube.YoutubeVideoInfo;
 
 @SuppressLint("ValidFragment")
 public class MyListFragment extends ListFragment {
-	List<YoutubeVideoInfo> listVideos = new ArrayList();
+	List<YoutubeVideoInfo> listVideos = new ArrayList<YoutubeVideoInfo>();
 
 	public MyListFragment() {
 	}
@@ -73,17 +73,15 @@ public class MyListFragment extends ListFragment {
 		});
 	}
 
-	public class VideoListAdapter extends ArrayAdapter {
+	public class VideoListAdapter extends ArrayAdapter<YoutubeVideoInfo> {
 
 		private int resource;
 		private LayoutInflater inflater;
-		private Context context;
 
-		public VideoListAdapter(Context ctx, int resourceId, List objects) {
+		public VideoListAdapter(Context ctx, int resourceId, List<YoutubeVideoInfo> objects) {
 			super(ctx, resourceId, objects);
 			resource = resourceId;
 			inflater = LayoutInflater.from(ctx);
-			context = ctx;
 		}
 
 		@Override
