@@ -13,6 +13,8 @@
  */
 package com.google.cloud.backend.android;
 
+import java.io.IOException;
+
 import android.app.Activity;
 import android.util.Log;
 import android.widget.Toast;
@@ -22,8 +24,6 @@ import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.googleapis.services.AbstractGoogleClient;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
-
-import java.io.IOException;
 
 /**
  * Common utilities.

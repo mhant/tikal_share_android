@@ -13,6 +13,13 @@
  */
 package com.google.cloud.backend.android;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -20,13 +27,6 @@ import android.content.SharedPreferences;
 import com.google.api.client.util.DateTime;
 import com.google.cloud.backend.android.CloudQuery.Order;
 import com.google.cloud.backend.android.CloudQuery.Scope;
-
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Cloud Backend API class that provides pub/sub messaging feature in addition

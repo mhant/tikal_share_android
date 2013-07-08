@@ -13,6 +13,12 @@
  */
 package com.google.cloud.backend.android;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import android.app.Activity;
 import android.app.Application;
 import android.app.Fragment;
@@ -25,12 +31,6 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccoun
 import com.google.cloud.backend.android.CloudQuery.Order;
 import com.google.cloud.backend.android.CloudQuery.Scope;
 import com.tikal.share.GCMIntentService;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Cloud Backend API class that provides asynchronous APIs in addition to

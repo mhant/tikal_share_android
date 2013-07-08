@@ -13,6 +13,8 @@
  */
 package com.tikal.share;
 
+import java.util.concurrent.CountDownLatch;
+
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -22,8 +24,6 @@ import com.google.android.gcm.GCMBaseIntentService;
 import com.google.android.gcm.GCMRegistrar;
 import com.google.cloud.backend.android.CloudBackendAsync;
 import com.google.cloud.backend.android.Consts;
-
-import java.util.concurrent.CountDownLatch;
 
 /**
  * This class manages Google Cloud Messaging push notifications and CloudQuery
