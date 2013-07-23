@@ -36,7 +36,7 @@
         </activity>
         <activity
             android:name="com.tikal.share.AppPreferenceFragment"
-            android:label="@string/preferences_title" >
+            android:label="@string/preferences_title" android:screenOrientation="portrait">
         </activity>
 
         <activity

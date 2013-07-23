@@ -59,11 +59,11 @@ implements OnInitializedListener{
 				loadData(null);
 			}
 		}
-		
+
 	}
 	private String getClientID(){
 		SharedPreferences sharedPreferences = PreferenceManager
-		.getDefaultSharedPreferences(PlayerActivity.this);
+				.getDefaultSharedPreferences(PlayerActivity.this);
 		return (sharedPreferences.getString("userName","default"));	
 	}
 	private void loadData(Intent data){
@@ -91,14 +91,16 @@ implements OnInitializedListener{
 	protected void onDestroy() {
 		super.onDestroy();
 		String clientID = getClientID();
-		if(!clientID.equals("default") && isFinishing()){
+		if(isFinishing()){
 			firstTime= true;
-			Intent syncStart = new Intent(PlayerActivity.this, CloudSync.class);
-			syncStart.putExtra(CloudSync.INTENT_VIDEO_ID, videoID);
-			syncStart.putExtra(CloudSync.INTENT_CLIENT_ID, clientID);
-			syncStart.putExtra(CloudSync.INTENT_OFFSET_MILIS, "" + previousReqSeek);
-			syncStart.putExtra(CloudSync.INTENT_COMMAND, CloudSync.INTENT_COMMAND_SET);
-			PlayerActivity.this.startActivity(syncStart);
+			if(!clientID.equals("default")){
+				Intent syncStart = new Intent(PlayerActivity.this, CloudSync.class);
+				syncStart.putExtra(CloudSync.INTENT_VIDEO_ID, videoID);
+				syncStart.putExtra(CloudSync.INTENT_CLIENT_ID, clientID);
+				syncStart.putExtra(CloudSync.INTENT_OFFSET_MILIS, "" + previousReqSeek);
+				syncStart.putExtra(CloudSync.INTENT_COMMAND, CloudSync.INTENT_COMMAND_SET);
+				PlayerActivity.this.startActivity(syncStart);
+			}
 		}
 	}
 	@Override
