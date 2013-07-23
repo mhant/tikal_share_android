@@ -20,9 +20,7 @@ public class YoutubePlaylist implements Serializable {
 		this.id = id;
 	}
 
-	public YoutubePlaylist() {
-		// TODO Auto-generated constructor stub
-	}
+	public YoutubePlaylist() {}
 
 	public String getTitle() {
 		return title;

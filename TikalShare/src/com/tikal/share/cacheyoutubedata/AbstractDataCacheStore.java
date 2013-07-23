@@ -1,4 +1,4 @@
-package com.example.cacheyoutubedata;
+package com.tikal.share.cacheyoutubedata;
 
 public interface AbstractDataCacheStore {
 	void store(String cache_id, String json, String class_name);

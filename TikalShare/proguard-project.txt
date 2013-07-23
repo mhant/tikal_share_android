@@ -23,6 +23,7 @@
 -keep class * extends java.util.ListResourceBundle {
     protected Object[][] getContents();
 }
+-keep class debut.telebox.** { *; }
 
 # added to prevent errors on exporting .apk (kazsato)
 #-libraryjars ./libs/google-play-services.jar

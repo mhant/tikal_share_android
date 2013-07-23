@@ -1,4 +1,4 @@
-package com.example.cacheyoutubedata;
+package com.tikal.share.cacheyoutubedata;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -13,6 +13,7 @@ import java.io.StreamCorruptedException;
 
 import android.content.Context;
 import android.util.Base64;
+import android.util.Log;
 
 import com.google.gson.JsonSyntaxException;
 import com.tikal.share.InfraException;
@@ -62,17 +63,13 @@ public class YouTubeDataCacher {
 			// ois.close();
 			return o;
 		} catch (JsonSyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e("YouTubeDataCacher", e.toString());
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e("YouTubeDataCacher", e.toString());
 		} catch (StreamCorruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e("YouTubeDataCacher", e.toString());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e("YouTubeDataCacher", e.toString());
 		}
 		return null;
 	}

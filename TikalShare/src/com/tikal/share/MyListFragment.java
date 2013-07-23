@@ -39,18 +39,7 @@ public class MyListFragment extends ListFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-
-		/*
-		 * List listVideos = new ArrayList(); listVideos.add(new Video("London",
-		 * "video about London", "10:22", "10/02/2012")); listVideos.add(new
-		 * Video("Rome", "video about Rome", "10:22", "10/02/2012"));
-		 * listVideos.add(new Video("Paris", "video about Paris", "10:22",
-		 * "10/02/2012")); listVideos.add(new Video("New York",
-		 * "video about New York", "10:22", "10/02/2012")); listVideos.add(new
-		 * Video("Tel aviv", "video about Tel Aviv", "10:22", "10/02/2012"));
-		 * listVideos.add(new Video("Holon", "video about Holon", "10:22",
-		 * "10/02/2012"));
-		 */VideoListAdapter vla = new VideoListAdapter(getActivity(),
+		VideoListAdapter vla = new VideoListAdapter(getActivity(),
 				R.layout.list_videos_row, listVideos);
 		setListAdapter(vla);
 		return super.onCreateView(inflater, container, savedInstanceState);
@@ -115,16 +104,6 @@ public class MyListFragment extends ListFragment {
 			txtName = (TextView) convertView.findViewById(R.id.video_created);
 			txtName.setText(video.getPublished());
 
-			/* Take the ImageView from layout and set the city's image */
-			/*
-			 * ImageView imageCity = (ImageView)
-			 * convertView.findViewById(R.id.ImageCity); String uri =
-			 * "drawable/" + video.getImage(); int imageResource =
-			 * context.getResources().getIdentifier(uri, null,
-			 * context.getPackageName()); Drawable image =
-			 * context.getResources().getDrawable(imageResource);
-			 * imageCity.setImageDrawable(image);
-			 */
 			return convertView;
 		}
 	}

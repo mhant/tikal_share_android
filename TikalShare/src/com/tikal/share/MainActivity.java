@@ -27,8 +27,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
-import com.example.cacheyoutubedata.PreferencesDataCacheStore;
-import com.example.cacheyoutubedata.YouTubeDataCacher;
+import com.tikal.share.cacheyoutubedata.PreferencesDataCacheStore;
+import com.tikal.share.cacheyoutubedata.YouTubeDataCacher;
 import com.tikal.share.youtube.LookupChannel;
 import com.tikal.share.youtube.YoutubeData;
 import com.tikal.share.youtube.YoutubePlaylist;
@@ -42,7 +42,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 	private YouTubeDataCacher myYTDC = null;
 	private PreferencesDataCacheStore myPDCS = null;
-	// private static String myCacheID = "my_youtube_cache";
 
 	private int playListCount = 3;
 	public static final String DATA_UPDATE = "data_update";
@@ -109,7 +108,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			
 			YoutubeData youtubeData = lookup.getYoutubeData(userName, downloadThumbnail);
 			myYTDC.saveToFile(youtubeData, MainActivity.this);
-			// myYTDC.cacheThis(myCacheID, youtubeData);
 			return youtubeData;
 		}
 
@@ -214,15 +212,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 			userName = "androiddev101";// enter channel name here
 			downloadThumbnail = sharedPreferences.getBoolean("downloadThumbnail", true);
 			youtubeAsyncTask.doExecute();
-			// Add tab action
-			/*
-			 * PLAYLIST_COUNT = 4; mViewPager.setAdapter(null);
-			 * mPlaylistPagerAdapter = new
-			 * PlayListPagerAdapter(getSupportFragmentManager());
-			 * mViewPager.setAdapter(mPlaylistPagerAdapter); //
-			 * mPlaylistPagerAdapter.notifyDataSetChanged();
-			 * mViewPager.invalidate(); addActionbarTabs(getSupportActionBar());
-			 */
 			break;
 		case R.id.action_settings:
 			startActivity(new Intent(this, AppPreferenceFragment.class));
@@ -260,13 +249,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 		@Override
 		public long getItemId(int position) {
-
 			return super.getItemId(position);
-
-			/*
-			 * switch (position) { case 0: case 1: case 2: return
-			 * super.getItemId(position); case 3: return 4; }
-			 */
 		}
 
 		@Override
@@ -288,18 +271,12 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	private BroadcastReceiver datareceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context arg0, Intent arg1) {
-			Toast.makeText(getApplicationContext(), "received", Toast.LENGTH_SHORT);
-			// onUpdateRecieve(getSupportActionBar());
 			addActionbarTabs(getActionBar());
-
 		}
 	};
 
 	@Override
-	public void onTabReselected(Tab tab, FragmentTransaction ft) {
-		// TODO Auto-generated method stub
-
-	}
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {}
 
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
@@ -309,9 +286,5 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	}
 
 	@Override
-	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-		// TODO Auto-generated method stub
-
-	}
-
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {}
 }

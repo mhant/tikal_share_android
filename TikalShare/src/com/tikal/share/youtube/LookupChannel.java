@@ -34,8 +34,7 @@ public class LookupChannel {
 	}
 
 	private static final String playlistUrl = "https://gdata.youtube.com/feeds/api/users/%s/playlists?v=2&fields=entry/title,entry/id";
-	private static final String videosUrl = "http://gdata.youtube.com/feeds/api/playlists/%s?fields=entry(title,published,link[@rel='alternate'],media:group(media:thumbnail,yt:duration,media:description))";
-//	
+	private static final String videosUrl = "http://gdata.youtube.com/feeds/api/playlists/%s?fields=entry(title,published,link[@rel='alternate'],media:group(media:thumbnail,yt:duration,media:description))";	
 	private static String debugPlayList = "<?xml version='1.0' encoding='UTF-8'?><feed xmlns='http://www.w3.org/2005/Atom'><entry><id>tag:youtube.com,2008:user:androiddev101:playlist:PLKRP8CTQBP8Ez1hka2dmWeuSGvPhwS8u1</id><title>Basics and Other</title></entry><entry><id>tag:youtube.com,2008:user:androiddev101:playlist:PLKRP8CTQBP8Ge6G5SK27s4LjFniHz6-PB</id><title>Interfaces</title></entry><entry><id>tag:youtube.com,2008:user:androiddev101:playlist:PLKRP8CTQBP8FMOF9sYZSslUy7zGmG8Xpp</id><title>Graphical</title></entry><entry><id>tag:youtube.com,2008:user:androiddev101:playlist:PLKRP8CTQBP8GE7TRf72Y_M0-2YDRjEQlm</id><title>AndroidDev101 Tutorials</title></entry></feed>";
 	private static String debugVideo = "<?xml version='1.0' encoding='UTF-8'?><feed xmlns='http://www.w3.org/2005/Atom'><entry><id>tag:youtube.com,2008:user:androiddev101:playlist:PLKRP8CTQBP8Ez1hka2dmWeuSGvPhwS8u1</id><title>Basics and Other</title></entry><entry><id>tag:youtube.com,2008:user:androiddev101:playlist:PLKRP8CTQBP8Ge6G5SK27s4LjFniHz6-PB</id><title>Interfaces</title></entry><entry><id>tag:youtube.com,2008:user:androiddev101:playlist:PLKRP8CTQBP8FMOF9sYZSslUy7zGmG8Xpp</id><title>Graphical</title></entry><entry><id>tag:youtube.com,2008:user:androiddev101:playlist:PLKRP8CTQBP8GE7TRf72Y_M0-2YDRjEQlm</id><title>AndroidDev101 Tutorials</title></entry></feed>";
 	private boolean debugMode = true;

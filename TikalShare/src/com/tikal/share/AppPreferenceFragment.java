@@ -1,22 +1,22 @@
 package com.tikal.share;
 
+import java.util.List;
+
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
 public class AppPreferenceFragment  extends PreferenceActivity{
 
-
-	@SuppressWarnings("deprecation")
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Load the preferences from an XML resource
-        addPreferencesFromResource(R.layout.pref);
-//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-//        String string = sharedPreferences.getString("userName", "");
-        
-        
     }
-
+	
+	/**
+     * Populate the activity with the top-level headers.
+     */
+    @Override
+    public void onBuildHeaders(List<Header> target) {
+        loadHeadersFromResource(R.xml.header_preferences, target);
+    }
 }
