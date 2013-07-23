@@ -55,10 +55,11 @@ implements OnInitializedListener{
 				syncStart.putExtra(CloudSync.INTENT_COMMAND,CloudSync.INTENT_COMMAND_GET);
 				this.startActivityForResult(syncStart, 55);
 			}
+			else{
+				loadData(null);
+			}
 		}
-		else{
-			loadData(null);
-		}
+		
 	}
 	private String getClientID(){
 		SharedPreferences sharedPreferences = PreferenceManager
